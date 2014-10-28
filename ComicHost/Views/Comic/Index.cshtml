@@ -1,0 +1,130 @@
+﻿@using ComicHost.Utils;
+@model ComicHost.Models.ComicModel
+@{
+    ViewBag.Title = Utils.Title + " " + (Model != null ? Model.ComicTags : "create and share");
+}
+@section featured {
+
+    <script type="text/javascript">
+
+        function hitComicServer(alltags) {
+            $.post('/comic/Search', { tags: alltags }, function (data) {
+                $("#comiclist").empty();
+
+                for (var i = 0; i < data.length; i++) {
+                    $("#comiclist").append("<a href='/comic/index/" + data[i].ComicPath + "'>" + 
+                    "<img alt='comic' src='/comic/thumbnail/" + data[i].ComicPath + "' class='container-border' />" +
+                    "</a>");
+                }
+            });
+        }
+
+        function onChangeTag(input, tag) {
+            hitComicServer($(input).val());
+        }
+
+        $(function () {
+            $('#SearchTags').tagsInput({
+                autocomplete_url: '/comic/Complete',
+                height: '100px',
+                width: '300px',
+                onChange: onChangeTag
+            });
+        });
+
+    </script>
+
+            @if (Model == null || String.IsNullOrEmpty(Model.ComicPath))
+            {
+                <script type="text/javascript">
+            hitComicServer();
+            </script>
+            }
+
+
+    <section class="featured">
+        <div class="content-wrapper">
+        
+                        <div class="float-right" style="margin-top: 100px">
+                        <span class="msgboxstyle">search by tag</span>
+@using (Html.BeginForm(new { @class = "loginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+                @Html.TextBoxFor(m => m.SearchTags, new { @class = "tag" })
+}
+
+<div style="margin-top: 10px" class="float-right">
+<script type="text/javascript"><!--
+    google_ad_client = "ca-pub-9900706080516157";
+    /* Right skyscrapper */
+    google_ad_slot = "2972041544";
+    google_ad_width = 160;
+    google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+                </div>
+<div class="standardwidth">
+<script type="text/javascript"><!--
+    google_ad_client = "ca-pub-9900706080516157";
+    /* Text Banner Top */
+    google_ad_slot = "4448774747";
+    google_ad_width = 728;
+    google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+            <div id="comiclist" class="standardwidth">
+            @if (Model != null && !String.IsNullOrEmpty(Model.ComicPath))
+            {
+                <p>permalink: <a href="@Model.PermaLink">@Model.PermaLink</a></p>
+                
+<span class='st_fblike_hcount socialbuttonmargins' displayText='Facebook Like'></span>
+<span class='st_twitter_hcount socialbuttonmargins' displayText='Tweet'></span>
+<span class='st_googleplus_hcount socialbuttonmargins' displayText='Google +'></span>
+<span class='st_plusone_hcount socialbuttonmargins' displayText='Google +1'></span>
+                <img alt="comic" src="/comic/usercontent/@Model.ComicPath" class="container-border" />
+                <br />
+                <span class="msgboxstyle">tags: @Model.ComicTags</span>
+                <br />
+<span class='st_sharethis_hcount socialbuttonmargins' displayText='ShareThis'></span>
+<span class='st_facebook_hcount socialbuttonmargins' displayText='Facebook'></span>
+<span class='st_fblike_hcount socialbuttonmargins' displayText='Facebook Like'></span>
+<span class='st_twitter_hcount socialbuttonmargins' displayText='Tweet'></span>
+<span class='st_googleplus_hcount socialbuttonmargins' displayText='Google +'></span>
+<span class='st_plusone_hcount socialbuttonmargins' displayText='Google +1'></span>
+<span class='st_stumbleupon_hcount socialbuttonmargins' displayText='StumbleUpon'></span>
+<span class='st_tumblr_hcount socialbuttonmargins' displayText='Tumblr'></span>
+<span class='st_reddit_hcount socialbuttonmargins' displayText='Reddit'></span>
+<span class='st_digg_hcount socialbuttonmargins' displayText='Digg'></span>
+<span class='st_delicious_hcount socialbuttonmargins' displayText='Delicious'></span>
+<span class='st_linkedin_hcount socialbuttonmargins' displayText='LinkedIn'></span>
+<span class='st_baidu_hcount socialbuttonmargins' displayText='Baidu'></span>
+<span class='st_pinterest_hcount socialbuttonmargins' displayText='Pinterest'></span>
+<span class='st_email_hcount socialbuttonmargins' displayText='Email'></span>
+            }
+            </div>
+<div>
+<script type="text/javascript"><!--
+    google_ad_client = "ca-pub-9900706080516157";
+    /* Text Banner Top */
+    google_ad_slot = "4448774747";
+    google_ad_width = 728;
+    google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+        </div>
+    </section>
+
+    }
