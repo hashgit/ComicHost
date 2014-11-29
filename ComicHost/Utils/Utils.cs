@@ -2,7 +2,7 @@
 {
     public class Utils
     {
-        public static string Title = "myinstantmeme";
-        public static string DomainName = "www.myinstantmeme.com";
+        public static string Title = "memegate";
+        public static string DomainName = "www.memegate.com";
     }
 }

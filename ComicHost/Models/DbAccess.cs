@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
 using System.Data.SqlClient;
-using System.Text;
 using System.Linq;
 
 namespace ComicHost.Models
 {
     public class DbAccess
     {
-        private static readonly string ConnectionString = ConfigurationManager.AppSettings["DbType"];
+        private static readonly string ConnectionStringType = ConfigurationManager.AppSettings["DbType"];
 
         public static DataSet GetTagIds(string[] tags)
         {
@@ -21,7 +18,7 @@ namespace ComicHost.Models
             var i = 0;
             var parameters = string.Join(",", tags.Select(tag => "@p" + i++));
 
-            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
 
             var queryString = @"select t.tagid, t.tagname from tags t
                             where t.tagname in (" + parameters + ")";
@@ -57,7 +54,7 @@ namespace ComicHost.Models
 
         public static DataSet GetTagsList(string startsWith)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
             const string queryString = @"select t.tagname from tags t where t.tagname like @p";
 
             var dataset = new DataSet();
@@ -90,7 +87,7 @@ namespace ComicHost.Models
             int i = 0;
             var parameters = string.Join(",", tags.Select(tag => "@p" + i++));
 
-            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
 
             string queryString;
 
@@ -163,10 +160,10 @@ namespace ComicHost.Models
 
         private static bool AddComic(Guid imageGuid, int[] tagids)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
 
             const string cQueryString = @"INSERT INTO comics VALUES (@comicid, @createdate)";
-            const string ctQueryString = @"INSERT INTO comics_tags VALUES (@tagid, @comicid)";
+            const string ctQueryString = @"INSERT INTO comics_tags (tagid, comicid) VALUES (@tagid, @comicid)";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -216,7 +213,7 @@ namespace ComicHost.Models
 
         private static int AddTags(string[] tagList)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
 
             const string queryString = @"MERGE tags AS t USING (SELECT @p AS m) AS c
                                                     ON t.tagname = c.m
@@ -258,7 +255,7 @@ namespace ComicHost.Models
                                 ComicPath = imgGuid.ToString()
                             };
 
-            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings[ConnectionStringType].ConnectionString;
             const string queryString = @"select t.tagname from tags t, comics_tags ct
                                 where ct.tagid = t.tagid
                                 and ct.comicid=@p";
